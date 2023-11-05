@@ -48,22 +48,6 @@ resource "null_resource" "argocd_install" {
   ]
 }
 
-resource "null_resource" "argocd_ip" {
-  triggers = {
-    always_run = "${timestamp()}"
-  }
-
-  provisioner "local-exec" {
-    command = <<EOT
-      kubectl get svc argocd-server -n argocd | awk -F' ' '{print $3}' | tail -1
-    EOT
-  }
-
-  depends_on = [
-    null_resource.argocd_install
-  ]
-}
-
 data "external" "argocd_url" {
   program = ["bash", "-c", 
     <<EOT
